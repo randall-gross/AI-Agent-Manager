@@ -10,6 +10,7 @@ from googleapiclient.errors import HttpError
 import json
 import sys
 import os
+import win32crypt
 
 def load_template(template_name):
     """Load agent template from templates folder"""
@@ -38,6 +39,46 @@ Describe the communication style here.
 ## Output Format
 Describe how the agent should format responses.
 """
+
+def decrypt_credentials(encrypted_data):
+    """Decrypt credentials using Windows DPAPI"""
+    try:
+        decrypted_bytes, description = win32crypt.CryptUnprotectData(encrypted_data, None, None, None, 0)
+        return decrypted_bytes.decode('utf-8')
+    except Exception as e:
+        print(f"❌ Failed to decrypt credentials: {e}")
+        return None
+
+def load_credentials():
+    """Load Google API credentials (encrypted or plain)"""
+    try:
+        # Try encrypted credentials first
+        if os.path.exists('credentials.json.encrypted'):
+            print("📦 Loading encrypted credentials...")
+            with open('credentials.json.encrypted', 'rb') as f:
+                encrypted_data = f.read()
+
+            creds_json = decrypt_credentials(encrypted_data)
+            if creds_json:
+                creds = Credentials.from_authorized_user_info(json.loads(creds_json))
+                print("✅ Encrypted credentials loaded successfully")
+                return creds
+            else:
+                print("❌ Failed to decrypt credentials.json.encrypted")
+                return None
+
+        # Fallback to unencrypted credentials
+        if os.path.exists('credentials.json'):
+            print("⚠️  Loading unencrypted credentials (security risk)")
+            creds = Credentials.from_authorized_user_file('credentials.json')
+            return creds
+
+        print("❌ No credentials file found - run setup first")
+        return None
+
+    except Exception as e:
+        print(f"❌ Error loading credentials: {e}")
+        return None
 
 def create_starter_agent(docs, drive, folder_id, agent_name, template_name):
     """Create a starter agent doc with template content"""
@@ -83,7 +124,10 @@ def main():
     """Initialize Google Drive folder structure"""
     try:
         # Load credentials
-        creds = Credentials.from_authorized_user_file('credentials.json')
+        creds = load_credentials()
+        if not creds:
+            print("❌ ERROR: Failed to load credentials")
+            return 1
 
         # Build services
         drive = build('drive', 'v3', credentials=creds)
@@ -226,12 +270,6 @@ To edit an agent, open its document in Google Drive and make changes.
         print()
 
         return 0
-
-    except FileNotFoundError:
-        print("❌ ERROR: credentials.json not found")
-        print("   This should have been created by auth_setup.py")
-        print("   Something went wrong with authorization")
-        return 1
 
     except HttpError as e:
         print(f"❌ ERROR: Google API error: {e}")
