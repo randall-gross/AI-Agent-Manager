@@ -24,12 +24,14 @@ if errorlevel 1 (
 )
 
 REM Check if required files exist
-if not exist "credentials.json" (
-    echo ERROR: credentials.json not found
-    echo Please run setup.ps1 first
-    echo.
-    pause
-    exit /b 1
+if not exist "credentials.json.encrypted" (
+    if not exist "credentials.json" (
+        echo ERROR: credentials.json or credentials.json.encrypted not found
+        echo Please run setup.ps1 first
+        echo.
+        pause
+        exit /b 1
+    )
 )
 
 if not exist "config.json" (
