@@ -2,8 +2,9 @@
 AI AGENT MANAGER - USER GUIDE
 ========================================
 
-Version: 1.0.0
+Version: 1.1.0
 Platform: Windows 11 (Windows 10 compatible)
+Python: 3.11+ (3.13 compatible)
 License: MIT
 
 ========================================
@@ -140,6 +141,9 @@ PREREQUISITE: Get Google OAuth credentials first (see section above)
    - Right-click: setup.ps1
    - Select: "Run with PowerShell"
    - Follow the prompts
+   - Setup will pre-download ngrok binary before asking for token
+   - Setup includes prominent test user requirement warning
+   - Setup provides detailed OAuth error messages if authorization fails
 
 2. START SERVER
    - Double-click: start-server.bat
@@ -286,7 +290,7 @@ SYSTEM REQUIREMENTS
 
 Required:
   - Windows 11 or Windows 10
-  - Python 3.11 or newer
+  - Python 3.11 or newer (3.13 compatible)
   - Google account (free)
   - Ngrok account (free)
   - ChatGPT Plus subscription
@@ -334,6 +338,14 @@ ChatGPT can't connect:
   - Is start-server.bat running?
   - Copy current URL from server window
   - Update your GPT Actions with new URL
+  - Verify API key is configured in Authentication
+
+OAuth authorization failed:
+  - Most common: Email mismatch - test user email doesn't match Gmail used
+  - Check: https://console.cloud.google.com/apis/credentials/consent
+  - Make sure YOUR Gmail is listed under 'Test users'
+  - The email must EXACTLY match the Gmail you selected
+  - See setup.ps1 output for detailed error explanations
 
 No agents found:
   - Check Google Drive for "AI Agents" folder
@@ -487,10 +499,38 @@ Testing:
 UNINSTALLING
 ========================================
 
-To completely remove:
-  1. Run: uninstall.ps1 or uninstall.bat
+AI Agent Manager includes a comprehensive uninstall script with three cleanup tiers.
+
+To uninstall:
+  Run: .\uninstall.ps1
+
+Cleanup Levels:
+
+1. MINIMAL - Quick cleanup for testing
+   - Removes: credentials, logs, generated configs
+   - Keeps: oauth_client.json, ngrok config, startup entry
+   - Use when: Testing setup changes, keeping configurations
+
+2. STANDARD - Normal uninstall (Recommended)
+   - Removes: All generated files, logs, startup entry
+   - Keeps: oauth_client.json, ngrok config
+   - Use when: Reinstalling, want to keep OAuth/ngrok setup
+
+3. FULL - Complete cleanup
+   - Removes: EVERYTHING including OAuth config and ngrok
+   - Warning: Will need to reconfigure OAuth and ngrok
+   - Use when: Complete removal, switching accounts
+
+The uninstaller provides:
+  - Clear status indicators ([OK], [SKIP], [KEEP], [ERROR])
+  - Detailed cleanup summary showing what was removed/kept
+  - Context-aware "Next Steps" guidance for each tier
+  - Comprehensive warnings for destructive operations
+
+To completely remove AI Agent Manager:
+  1. Run: .\uninstall.ps1 (select FULL cleanup)
   2. Delete this folder
-  3. Delete "AI Agents" folder from Google Drive
+  3. Delete "AI Agents" folder from Google Drive (manual)
   4. Revoke app access:
      - Go to: https://myaccount.google.com/permissions
      - Remove "AI Agent Manager"
@@ -508,7 +548,7 @@ Logs:
   - agent-server.log (errors and activity)
 
 Version:
-  - Current: 1.0.0
+  - Current: 1.1.0
   - Check version.py for details
 
 Updates:
@@ -577,8 +617,20 @@ A: Yes! Use Google Drive's export feature (File > Download).
 VERSION HISTORY
 ========================================
 
-1.0.0 (2025-10-20)
-  - Initial release
+1.1.0 (2025-10-20) - Security & UX Update
+  - Added API authentication with Bearer tokens
+  - Added credential encryption (Windows DPAPI)
+  - Added OAuth protection (separate client file)
+  - Added rate limiting (10 creates/hour, 100 reads/hour)
+  - Added comprehensive input validation
+  - Enhanced setup UX (pre-downloads ngrok, test user warnings)
+  - Enhanced uninstall (3-tier cleanup: MINIMAL/STANDARD/FULL)
+  - Improved OAuth error messages (3 most common failures explained)
+  - Fixed Python 3.13 compatibility (pillow>=10.1.0, pywin32>=306)
+  - Fixed init_drive.py encrypted credentials support
+  - Fixed PowerShell syntax issues
+
+1.0.0 (2025-10-20) - Initial Release
   - Core agent management
   - Google Drive integration
   - ChatGPT Actions support

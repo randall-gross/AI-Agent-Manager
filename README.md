@@ -3,7 +3,7 @@
 [![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://github.com/randall-gross/AI-Agent-Manager)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Windows%2011%2F10-lightgrey.svg)]()
-[![Python](https://img.shields.io/badge/python-3.11+-blue.svg)]()
+[![Python](https://img.shields.io/badge/python-3.11%2B%20%7C%203.13-blue.svg)]()
 
 > Create and manage unlimited custom AI agents for ChatGPT using Google Docs - no coding required, runs on your computer, all data stays private.
 
@@ -39,7 +39,7 @@ AI Agent Manager lets you create specialized AI agents through conversation with
 ### Prerequisites
 
 - Windows 11 (or Windows 10)
-- Python 3.11 or newer
+- Python 3.11 or newer (3.13 compatible)
 - ChatGPT Plus subscription
 - Google account (free)
 - Internet connection
@@ -248,6 +248,42 @@ type agent-server.log
 
 ---
 
+## Uninstalling
+
+AI Agent Manager includes a comprehensive uninstall script with three cleanup tiers:
+
+**Quick uninstall:**
+```powershell
+.\uninstall.ps1
+```
+
+**Cleanup Levels:**
+
+1. **MINIMAL** - Quick cleanup for testing
+   - Removes: credentials, logs, generated configs
+   - Keeps: oauth_client.json, ngrok config, startup entry
+   - Use when: Testing setup changes, keeping configurations
+
+2. **STANDARD** - Normal uninstall (Recommended)
+   - Removes: All generated files, logs, startup entry
+   - Keeps: oauth_client.json, ngrok config
+   - Use when: Reinstalling, want to keep OAuth/ngrok setup
+
+3. **FULL** - Complete cleanup
+   - Removes: EVERYTHING including OAuth config and ngrok
+   - Warning: Will need to reconfigure OAuth and ngrok
+   - Use when: Complete removal, switching accounts
+
+The uninstaller provides:
+- Clear status indicators ([OK], [SKIP], [KEEP], [ERROR])
+- Detailed cleanup summary showing what was removed/kept
+- Context-aware "Next Steps" guidance for each tier
+- Comprehensive warnings for destructive operations
+
+**Note:** Google Drive folder must be deleted manually for security.
+
+---
+
 ## Advanced Features
 
 ### Auto-start on Boot
@@ -297,7 +333,7 @@ AI-Agent-Manager/
 ## Requirements
 
 - **Platform:** Windows 11 or Windows 10
-- **Python:** 3.11 or newer
+- **Python:** 3.11 or newer (3.13 compatible)
 - **ChatGPT:** Plus subscription (for custom GPTs)
 - **Google:** Free Google account
 - **Ngrok:** Free account (optional $8/month for static URL)
@@ -346,12 +382,18 @@ Created for non-technical users who want custom AI agents without cloud hosting 
 
 ## Version History
 
-**v1.1.0** (2025-10-20) - Security Update
-- Added API authentication
-- Added credential encryption
-- Added OAuth protection
-- Added rate limiting
-- Added input validation
+**v1.1.0** (2025-10-20) - Security & UX Update
+- Added API authentication with Bearer tokens
+- Added credential encryption (Windows DPAPI)
+- Added OAuth protection (separate client file)
+- Added rate limiting (10 creates/hour, 100 reads/hour)
+- Added comprehensive input validation
+- Enhanced setup UX (pre-downloads ngrok, test user warnings)
+- Enhanced uninstall (3-tier cleanup: MINIMAL/STANDARD/FULL)
+- Improved OAuth error messages (3 most common failures explained)
+- Fixed Python 3.13 compatibility (pillow>=10.1.0, pywin32>=306)
+- Fixed init_drive.py encrypted credentials support
+- Fixed PowerShell syntax issues
 
 **v1.0.0** (2025-10-20) - Initial Release
 - Core agent management

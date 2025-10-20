@@ -278,6 +278,32 @@ Create a new agent for writing Instagram captions
 - Check Windows Firewall isn't blocking Python
 - Look at `agent-server.log` for errors
 
+### OAuth Authorization Failed (NEW)
+
+**Problem:** Setup fails during Google OAuth authorization
+
+**Common Causes:**
+
+1. **EMAIL MISMATCH** (Most Common)
+   - The Gmail you selected doesn't match the test user you added
+   - Solution: Go to https://console.cloud.google.com/apis/credentials/consent
+   - Verify YOUR email is listed under 'Test users'
+   - The email must EXACTLY match the Gmail you use to authorize
+
+2. **MISSING TEST USER**
+   - You didn't add yourself as a test user in OAuth consent screen
+   - Solution: Go to https://console.cloud.google.com/apis/credentials/consent
+   - Scroll to 'Test users' section
+   - Click 'ADD USERS' and add your Gmail
+   - Click 'SAVE'
+
+3. **WRONG OAUTH CREDENTIALS**
+   - oauth_client.json has incorrect client_id or client_secret
+   - Solution: Check oauth_client.json values match Google Cloud Console
+   - Get correct values from https://console.cloud.google.com/apis/credentials
+
+**Note:** Setup.ps1 now provides detailed error messages with direct links to these fixes if OAuth fails.
+
 ### "No agents found"
 
 **Problem:** Server running but can't find agents

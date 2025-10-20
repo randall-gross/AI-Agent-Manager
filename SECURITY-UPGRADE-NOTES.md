@@ -325,14 +325,52 @@ python -m pip install -r requirements.txt
 
 ---
 
+## Additional Improvements in v1.1.0
+
+Beyond security enhancements, this update includes:
+
+### Setup UX Improvements (setup.ps1)
+- Pre-downloads ngrok binary before asking for authtoken (eliminates confusion)
+- Prominent test user requirement warning with confirmation prompt
+- Detailed OAuth error messages explaining 3 most common failures:
+  1. Email mismatch (test user vs selected Gmail)
+  2. Missing test user (not added to OAuth consent)
+  3. Wrong credentials (invalid oauth_client.json)
+- Direct links to exact Google Cloud Console pages for troubleshooting
+
+### Enhanced Uninstall System (uninstall.ps1)
+New comprehensive uninstaller with three cleanup tiers:
+- **MINIMAL**: Quick cleanup for testing (keeps configs, startup entry)
+- **STANDARD**: Normal uninstall (keeps OAuth and ngrok for easier reinstall)
+- **FULL**: Complete removal (everything including oauth_client.json and system ngrok)
+
+Features:
+- Comprehensive warnings for destructive operations
+- Detailed cleanup summary showing what was removed/kept
+- Status indicators ([OK], [SKIP], [KEEP], [ERROR], [WARN])
+- Context-aware "Next Steps" guidance for each tier
+
+### Bug Fixes
+- **Python 3.13 compatibility**: Updated pillow>=10.1.0, pywin32>=306
+- **init_drive.py**: Now supports encrypted credentials (consistent with agent_server.py)
+- **PowerShell syntax**: Fixed corrupted Unicode characters in scripts
+
+---
+
 ## Version History
 
-**v1.1.0 (2025-10-20) - Security Update**
-- Added API authentication
-- Added credential encryption
-- Added OAuth protection
-- Added rate limiting
-- Added input validation
+**v1.1.0 (2025-10-20) - Security & UX Update**
+- Added API authentication with Bearer tokens
+- Added credential encryption (Windows DPAPI)
+- Added OAuth protection (separate client file)
+- Added rate limiting (10 creates/hour, 100 reads/hour)
+- Added comprehensive input validation
+- Enhanced setup UX (pre-downloads ngrok, test user warnings)
+- Enhanced uninstall (3-tier cleanup: MINIMAL/STANDARD/FULL)
+- Improved OAuth error messages (3 most common failures explained)
+- Fixed Python 3.13 compatibility (pillow>=10.1.0, pywin32>=306)
+- Fixed init_drive.py encrypted credentials support
+- Fixed PowerShell syntax issues
 
 **v1.0.0 (2025-10-20) - Initial Release**
 - Basic agent management

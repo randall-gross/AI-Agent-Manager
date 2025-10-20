@@ -7,7 +7,7 @@
 ## Prerequisites
 
 - Windows 11 (or 10)
-- Python 3.11+
+- Python 3.11+ (3.13 compatible)
 - ChatGPT Plus subscription
 - Google account (free)
 - Internet connection
@@ -78,12 +78,15 @@
 2. Select: "Run with PowerShell"
 3. Follow prompts:
    - Python installation check
-   - Virtual environment creation
-   - Dependency installation
+   - Dependency installation (includes Python 3.13 compatibility)
+   - Ngrok binary pre-download (happens before token prompt for better UX)
+   - Test user requirement warning (IMPORTANT)
    - Google Drive folder creation
    - Starter agents initialization
 4. Browser will open for Google OAuth - click "Allow"
 5. Wait for "Setup complete!" message
+
+**Note:** Setup now provides enhanced error messages if OAuth fails, with links to exact console pages for troubleshooting the 3 most common failures.
 
 ---
 
@@ -193,7 +196,19 @@ python init_drive.py
 - Server must be running (start-server.bat)
 - Check server console is open
 - Verify ngrok URL in Actions matches server console
+- Verify API key is configured in Authentication
 - Check Windows Firewall isn't blocking Python
+
+**OAuth authorization failed:**
+- **Most common:** Email mismatch - test user email doesn't match Gmail used
+- Check: https://console.cloud.google.com/apis/credentials/consent
+- Make sure YOUR Gmail is listed under 'Test users'
+- The email must EXACTLY match the Gmail you selected
+- Setup.ps1 will show detailed error messages with direct links to fix
+- Common errors explained:
+  1. EMAIL MISMATCH - Test user doesn't match selected Gmail
+  2. MISSING TEST USER - You didn't add yourself as test user
+  3. WRONG CREDENTIALS - Check oauth_client.json values
 
 **No agents found:**
 - Run: `python test_server.py` to diagnose
