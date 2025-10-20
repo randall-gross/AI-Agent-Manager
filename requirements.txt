@@ -5,8 +5,8 @@ google-auth-oauthlib==1.2.0
 google-api-python-client==2.110.0
 pyngrok==7.0.0
 pystray==0.19.5
-pillow==10.1.0
-pywin32==306
+pillow>=10.1.0
+pywin32>=306
 win10toast==0.9
 pyperclip==1.8.2
 requests==2.31.0
