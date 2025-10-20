@@ -43,7 +43,8 @@ Describe how the agent should format responses.
 def decrypt_credentials(encrypted_data):
     """Decrypt credentials using Windows DPAPI"""
     try:
-        decrypted_bytes, description = win32crypt.CryptUnprotectData(encrypted_data, None, None, None, 0)
+        # CryptUnprotectData returns (description, decrypted_bytes) tuple
+        description, decrypted_bytes = win32crypt.CryptUnprotectData(encrypted_data, None, None, None, 0)
         return decrypted_bytes.decode('utf-8')
     except Exception as e:
         print(f"❌ Failed to decrypt credentials: {e}")

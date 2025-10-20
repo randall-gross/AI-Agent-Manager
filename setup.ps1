@@ -151,7 +151,7 @@ if ($oauthContent -match "YOUR_CLIENT_ID") {
     Write-Host ""
     Write-Host "  Get credentials from: https://console.cloud.google.com/apis/credentials" -ForegroundColor Cyan
     Write-Host ""
-    Read-Host "Press Enter to exit"
+    Read-Host "Press Enter to continue after fixing oauth_client.json"
     exit 1
 }
 

@@ -149,7 +149,8 @@ def load_config():
 def decrypt_credentials(encrypted_data):
     """Decrypt credentials using Windows DPAPI"""
     try:
-        decrypted_bytes, description = win32crypt.CryptUnprotectData(encrypted_data, None, None, None, 0)
+        # CryptUnprotectData returns (description, decrypted_bytes) tuple
+        description, decrypted_bytes = win32crypt.CryptUnprotectData(encrypted_data, None, None, None, 0)
         return decrypted_bytes.decode('utf-8')
     except Exception as e:
         logger.error(f"Failed to decrypt credentials: {e}")
