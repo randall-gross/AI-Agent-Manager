@@ -1,0 +1,149 @@
+openapi: 3.1.0
+info:
+  title: AI Agent Manager API
+  description: Dynamic agent system that loads specialized AI agents from Google Drive
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Local development server (REPLACE WITH YOUR NGROK URL)
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: token
+      description: API key from GPT-CONFIG.txt file
+security:
+  - BearerAuth: []
+paths:
+  /health:
+    get:
+      operationId: healthCheck
+      summary: Check server health and status
+      responses:
+        '200':
+          description: Server is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  version:
+                    type: string
+                  google_drive:
+                    type: string
+                  agent_folder:
+                    type: string
+                  ngrok_url:
+                    type: string
+  /agents:
+    get:
+      operationId: listAgents
+      summary: List all available agents
+      description: Returns a list of all agent documents in Google Drive
+      responses:
+        '200':
+          description: List of agents
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  agents:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        modified:
+                          type: string
+                  count:
+                    type: integer
+    post:
+      operationId: createAgent
+      summary: Create a new agent
+      description: Creates a new agent document in Google Drive with structured content
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  description: Agent name/title
+                purpose:
+                  type: string
+                  description: What the agent does
+                skills:
+                  type: array
+                  items:
+                    type: string
+                  description: List of agent capabilities
+                rules:
+                  type: array
+                  items:
+                    type: string
+                  description: Constraints and requirements
+                tone:
+                  type: string
+                  description: Communication style
+                output_format:
+                  type: string
+                  description: How to structure responses
+      responses:
+        '201':
+          description: Agent created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  url:
+                    type: string
+                  message:
+                    type: string
+  /agents/{agent_id}:
+    get:
+      operationId: getAgent
+      summary: Load a specific agent
+      description: Returns the full prompt/instructions for an agent
+      parameters:
+        - name: agent_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The Google Doc ID of the agent
+      responses:
+        '200':
+          description: Agent details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  prompt:
+                    type: string
+                  modified:
+                    type: string
+                  length:
+                    type: integer
+        '404':
+          description: Agent not found
