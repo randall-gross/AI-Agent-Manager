@@ -130,33 +130,104 @@ if (!(Test-Path "oauth_client.json")) {
 
     $copyTemplate = Read-Host "Copy template file now? (Y/n)"
     if ($copyTemplate -ne "n") {
-        Copy-Item "oauth_client.json.template" "oauth_client.json"
-        Write-Host "  Template copied to oauth_client.json" -ForegroundColor Green
+        if (Test-Path "oauth_client.json.template") {
+            Copy-Item "oauth_client.json.template" "oauth_client.json"
+            Write-Host ""
+            Write-Host "  Template copied to oauth_client.json" -ForegroundColor Green
+            Write-Host ""
+            Write-Host "  Next steps:" -ForegroundColor Yellow
+            Write-Host "    1. Edit oauth_client.json with your Google Cloud credentials" -ForegroundColor Cyan
+            Write-Host "    2. Run setup.ps1 again" -ForegroundColor Cyan
+        } else {
+            Write-Host ""
+            Write-Host "  ERROR: oauth_client.json.template not found" -ForegroundColor Red
+        }
+    } else {
         Write-Host ""
-        Write-Host "  Now edit oauth_client.json with your credentials and run setup again." -ForegroundColor Yellow
+        Write-Host "  Please create oauth_client.json with your credentials, then run setup again." -ForegroundColor Yellow
     }
     Write-Host ""
     Read-Host "Press Enter to exit"
     exit 1
 }
 
-# Validate oauth_client.json
-$oauthContent = Get-Content "oauth_client.json" -Raw
-if ($oauthContent -match "YOUR_CLIENT_ID") {
+# File exists - now validate it has real credentials (not template placeholders)
+try {
+    $oauthJson = Get-Content "oauth_client.json" -Raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
+
+    # Check if the JSON has the expected structure
+    if (-not $oauthJson.installed) {
+        Write-Host ""
+        Write-Host "  ERROR: oauth_client.json has invalid structure" -ForegroundColor Red
+        Write-Host "  Expected 'installed' key not found" -ForegroundColor Yellow
+        Write-Host ""
+        Write-Host "  Your oauth_client.json should look like oauth_client.json.template" -ForegroundColor Yellow
+        Write-Host ""
+        Read-Host "Press Enter to exit. After fixing oauth_client.json, run setup again"
+        exit 1
+    }
+
+    # Extract the actual values
+    $clientId = $oauthJson.installed.client_id
+    $clientSecret = $oauthJson.installed.client_secret
+
+    # Check if values are still placeholders (case-insensitive check for "YOUR_")
+    $hasPlaceholders = $false
+    $placeholderFields = @()
+
+    if ($clientId -match "YOUR_") {
+        $hasPlaceholders = $true
+        $placeholderFields += "client_id"
+    }
+
+    if ($clientSecret -match "YOUR_") {
+        $hasPlaceholders = $true
+        $placeholderFields += "client_secret"
+    }
+
+    if ($hasPlaceholders) {
+        Write-Host ""
+        Write-Host "  ERROR: oauth_client.json contains placeholder values" -ForegroundColor Red
+        Write-Host ""
+        Write-Host "  The following fields still have template values:" -ForegroundColor Yellow
+        foreach ($field in $placeholderFields) {
+            Write-Host "    - $field" -ForegroundColor Cyan
+        }
+        Write-Host ""
+        Write-Host "  Please edit oauth_client.json and replace these with your actual" -ForegroundColor Yellow
+        Write-Host "  Google Cloud OAuth credentials." -ForegroundColor Yellow
+        Write-Host ""
+        Write-Host "  Get credentials from: https://console.cloud.google.com/apis/credentials" -ForegroundColor Cyan
+        Write-Host ""
+        Read-Host "Press Enter to exit. After fixing oauth_client.json, run setup again"
+        exit 1
+    }
+
+    # Validate that values look reasonable (basic sanity check)
+    if ([string]::IsNullOrWhiteSpace($clientId) -or [string]::IsNullOrWhiteSpace($clientSecret)) {
+        Write-Host ""
+        Write-Host "  ERROR: oauth_client.json has empty client_id or client_secret" -ForegroundColor Red
+        Write-Host ""
+        Write-Host "  Please ensure both fields are filled with valid credentials." -ForegroundColor Yellow
+        Write-Host ""
+        Read-Host "Press Enter to exit. After fixing oauth_client.json, run setup again"
+        exit 1
+    }
+
+    # All good!
+    Write-Host "  oauth_client.json found and validated" -ForegroundColor Green
     Write-Host ""
-    Write-Host "  ERROR: oauth_client.json contains placeholder values" -ForegroundColor Red
+
+} catch {
     Write-Host ""
-    Write-Host "  Please edit oauth_client.json and replace the placeholder values" -ForegroundColor Yellow
-    Write-Host "  with your actual Google Cloud OAuth credentials." -ForegroundColor Yellow
+    Write-Host "  ERROR: Failed to parse oauth_client.json" -ForegroundColor Red
+    Write-Host "  $($_.Exception.Message)" -ForegroundColor Yellow
     Write-Host ""
-    Write-Host "  Get credentials from: https://console.cloud.google.com/apis/credentials" -ForegroundColor Cyan
+    Write-Host "  Make sure oauth_client.json is valid JSON format." -ForegroundColor Yellow
     Write-Host ""
-    Read-Host "Press Enter to continue after fixing oauth_client.json"
+    Read-Host "Press Enter to exit. After fixing oauth_client.json, run setup again"
     exit 1
 }
-
-Write-Host "  oauth_client.json found and validated" -ForegroundColor Green
-Write-Host ""
 
 # CRITICAL: Test User Requirement Warning
 Write-Host "========================================" -ForegroundColor Yellow
@@ -248,13 +319,19 @@ Write-Host ""
 
 # Quick test - check if files exist
 $filesOk = $true
-$requiredFiles = @('credentials.json', 'config.json')
+$requiredFiles = @('credentials.json.encrypted', 'config.json')
 
 foreach ($file in $requiredFiles) {
     if (!(Test-Path $file)) {
         Write-Host "  ERROR: $file not found" -ForegroundColor Red
         $filesOk = $false
     }
+}
+
+# Also accept unencrypted credentials as fallback
+if (!(Test-Path 'credentials.json.encrypted') -and (Test-Path 'credentials.json')) {
+    Write-Host "  Note: Using unencrypted credentials" -ForegroundColor Yellow
+    $filesOk = $true
 }
 
 if (!$filesOk) {
