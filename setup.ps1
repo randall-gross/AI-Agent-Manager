@@ -55,6 +55,19 @@ if ($LASTEXITCODE -ne 0) {
 Write-Host "  Packages installed successfully" -ForegroundColor Green
 Write-Host ""
 
+# Pre-download ngrok binary (better UX - avoids delay after token entry)
+Write-Host "Preparing ngrok..." -ForegroundColor Yellow
+Write-Host "  (Downloading ngrok binary if needed - first time only)" -ForegroundColor Gray
+
+$ngrokPrep = python -c "from pyngrok import ngrok; import sys; sys.stdout.reconfigure(encoding='utf-8'); print('ready')" 2>&1
+if ($ngrokPrep -notmatch "ready") {
+    Write-Host "  First-time setup: Downloading ngrok..." -ForegroundColor Gray
+    Write-Host "  This may take a minute..." -ForegroundColor Gray
+}
+
+Write-Host "  Ngrok binary ready" -ForegroundColor Green
+Write-Host ""
+
 # Ngrok setup
 Write-Host "Ngrok Configuration" -ForegroundColor Yellow
 Write-Host "  Ngrok creates a secure tunnel so ChatGPT can reach your local server" -ForegroundColor Gray
@@ -145,6 +158,36 @@ if ($oauthContent -match "YOUR_CLIENT_ID") {
 Write-Host "  oauth_client.json found and validated" -ForegroundColor Green
 Write-Host ""
 
+# CRITICAL: Test User Requirement Warning
+Write-Host "========================================" -ForegroundColor Yellow
+Write-Host "  IMPORTANT: Test User Setup Required" -ForegroundColor Yellow
+Write-Host "========================================" -ForegroundColor Yellow
+Write-Host ""
+Write-Host "Before continuing, you MUST add yourself as a test user in Google Cloud Console." -ForegroundColor White
+Write-Host "Without this, you'll get an 'Access blocked: verification process' error!" -ForegroundColor Red
+Write-Host ""
+Write-Host "Steps to add test user:" -ForegroundColor White
+Write-Host "  1. Go to: https://console.cloud.google.com/apis/credentials/consent" -ForegroundColor Cyan
+Write-Host "  2. Scroll down to 'Test users' section" -ForegroundColor Cyan
+Write-Host "  3. Click 'ADD USERS' button" -ForegroundColor Cyan
+Write-Host "  4. Enter the EXACT Gmail you'll use to authorize" -ForegroundColor Cyan
+Write-Host "     (e.g., yourname@gmail.com)" -ForegroundColor Gray
+Write-Host "  5. Click 'ADD' then 'SAVE'" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "IMPORTANT: The test user email MUST match the Gmail you select in the browser!" -ForegroundColor Yellow
+Write-Host ""
+
+$testUserConfirm = Read-Host "Have you added your Gmail as a test user? (Y/n)"
+if ($testUserConfirm -eq "n") {
+    Write-Host ""
+    Write-Host "  Please add yourself as a test user first, then run setup again." -ForegroundColor Yellow
+    Write-Host ""
+    Read-Host "Press Enter to exit"
+    exit 1
+}
+
+Write-Host ""
+
 # Google OAuth setup
 Write-Host "Google Drive Authorization" -ForegroundColor Yellow
 Write-Host "  A browser will open for you to authorize Google Drive access" -ForegroundColor Gray
@@ -156,7 +199,26 @@ python auth_setup.py
 if ($LASTEXITCODE -ne 0) {
     Write-Host ""
     Write-Host "  ERROR: Google authorization failed" -ForegroundColor Red
-    Write-Host "  Please try running setup again" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "Most common causes:" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "1. EMAIL MISMATCH - Test user email doesn't match Gmail used" -ForegroundColor White
+    Write-Host "   - Check: https://console.cloud.google.com/apis/credentials/consent" -ForegroundColor Cyan
+    Write-Host "   - Make sure YOUR Gmail is listed under 'Test users'" -ForegroundColor Cyan
+    Write-Host "   - The email must EXACTLY match the Gmail you selected" -ForegroundColor Cyan
+    Write-Host ""
+    Write-Host "2. MISSING TEST USER - You didn't add yourself as a test user" -ForegroundColor White
+    Write-Host "   - Go to: https://console.cloud.google.com/apis/credentials/consent" -ForegroundColor Cyan
+    Write-Host "   - Scroll to 'Test users' section" -ForegroundColor Cyan
+    Write-Host "   - Click 'ADD USERS' and add your Gmail" -ForegroundColor Cyan
+    Write-Host ""
+    Write-Host "3. WRONG OAUTH CREDENTIALS - Check oauth_client.json" -ForegroundColor White
+    Write-Host "   - Make sure client_id and client_secret are correct" -ForegroundColor Cyan
+    Write-Host ""
+    Write-Host "If you see 'Access blocked' or '403: access_denied':" -ForegroundColor Red
+    Write-Host "  This is almost always a test user issue!" -ForegroundColor Red
+    Write-Host ""
+    Write-Host "  Please fix the issue above and run setup again." -ForegroundColor Yellow
     Write-Host ""
     Read-Host "Press Enter to exit"
     exit 1
