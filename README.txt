@@ -116,7 +116,7 @@ Step 6: Create oauth_client.json File
   4. Replace "YOUR_CLIENT_ID_HERE" with your Client ID
   5. Replace "YOUR_CLIENT_SECRET_HERE" with your Client Secret
   6. Save the file as: oauth_client.json
-     (Remove .template from the name)
+     (Remove .EXAMPLE from the name)
 
 Step 7: Verify Your Setup
 --------------------------
