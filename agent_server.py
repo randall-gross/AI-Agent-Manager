@@ -28,6 +28,7 @@ from datetime import datetime
 import threading
 import time
 import secrets
+import yaml
 import re
 import html
 import win32crypt
@@ -289,6 +290,32 @@ def start_ngrok():
 
     try:
         logger.info("Starting ngrok tunnel...")
+
+        # Load authtoken from ngrok.yml if not already configured
+        from pyngrok import conf
+        config_obj = conf.get_default()
+
+        if not config_obj.auth_token:
+            ngrok_config_path = os.path.expanduser('~/.ngrok2/ngrok.yml')
+
+            if os.path.exists(ngrok_config_path):
+                try:
+                    with open(ngrok_config_path, 'r') as f:
+                        ngrok_config = yaml.safe_load(f)
+                        if ngrok_config and 'authtoken' in ngrok_config:
+                            ngrok.set_auth_token(ngrok_config['authtoken'])
+                            logger.info("✅ Loaded authtoken from ~/.ngrok2/ngrok.yml")
+                        else:
+                            logger.error("❌ No authtoken found in ngrok.yml")
+                            logger.error("Please run setup.ps1 to configure ngrok")
+                            return False
+                except Exception as e:
+                    logger.error(f"Failed to read ngrok.yml: {e}")
+                    return False
+            else:
+                logger.error("❌ No ngrok configuration found at ~/.ngrok2/ngrok.yml")
+                logger.error("Please run setup.ps1 to configure ngrok")
+                return False
 
         # Start tunnel
         tunnel = ngrok.connect(3000, bind_tls=True)
