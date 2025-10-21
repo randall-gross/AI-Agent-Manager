@@ -1,7 +1,6 @@
 # Security - Never commit these files
 credentials.json
 credentials.json.encrypted
-oauth_client.json
 config.json
 
 # Python
