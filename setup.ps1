@@ -126,7 +126,7 @@ if (!(Test-Path "oauth_client.json")) {
     Write-Host "  You need to create oauth_client.json with your Google Cloud credentials." -ForegroundColor White
     Write-Host ""
     Write-Host "  Steps:" -ForegroundColor White
-    Write-Host "    1. Copy oauth_client.json.template to oauth_client.json" -ForegroundColor Cyan
+    Write-Host "    1. Copy oauth_client.json.EXAMPLE to oauth_client.json" -ForegroundColor Cyan
     Write-Host "    2. Go to: https://console.cloud.google.com/apis/credentials" -ForegroundColor Cyan
     Write-Host "    3. Create OAuth 2.0 Client ID (Desktop app)" -ForegroundColor Cyan
     Write-Host "    4. Download credentials and copy values to oauth_client.json" -ForegroundColor Cyan
@@ -134,8 +134,8 @@ if (!(Test-Path "oauth_client.json")) {
 
     $copyTemplate = Read-Host "Copy template file now? (Y/n)"
     if ($copyTemplate -ne "n") {
-        if (Test-Path "oauth_client.json.template") {
-            Copy-Item "oauth_client.json.template" "oauth_client.json"
+        if (Test-Path "oauth_client.json.EXAMPLE") {
+            Copy-Item "oauth_client.json.EXAMPLE" "oauth_client.json"
             Write-Host ""
             Write-Host "  Template copied to oauth_client.json" -ForegroundColor Green
             Write-Host ""
@@ -144,7 +144,7 @@ if (!(Test-Path "oauth_client.json")) {
             Write-Host "    2. Run setup.ps1 again" -ForegroundColor Cyan
         } else {
             Write-Host ""
-            Write-Host "  ERROR: oauth_client.json.template not found" -ForegroundColor Red
+            Write-Host "  ERROR: oauth_client.json.EXAMPLE not found" -ForegroundColor Red
         }
     } else {
         Write-Host ""
@@ -165,7 +165,7 @@ try {
         Write-Host "  ERROR: oauth_client.json has invalid structure" -ForegroundColor Red
         Write-Host "  Expected 'installed' key not found" -ForegroundColor Yellow
         Write-Host ""
-        Write-Host "  Your oauth_client.json should look like oauth_client.json.template" -ForegroundColor Yellow
+        Write-Host "  Your oauth_client.json should look like oauth_client.json.EXAMPLE" -ForegroundColor Yellow
         Write-Host ""
         Read-Host "Press Enter to exit. After fixing oauth_client.json, run setup again"
         exit 1

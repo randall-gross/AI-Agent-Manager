@@ -103,7 +103,7 @@ Step 5: Copy Your Credentials
 
 Step 6: Create oauth_client.json File
 --------------------------------------
-  1. In the AI-Agent-Manager folder, find: oauth_client.json.template
+  1. In the AI-Agent-Manager folder, find: oauth_client.json.EXAMPLE
   2. Open it with Notepad
   3. You'll see this:
      {

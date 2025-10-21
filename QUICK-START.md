@@ -62,11 +62,11 @@
 **Copy and edit credentials file:**
 
 1. Open folder: `AI-Agent-Manager`
-2. Find file: `oauth_client.json.template`
+2. Find file: `oauth_client.json.EXAMPLE`
 3. Open with Notepad
 4. Replace `"YOUR_CLIENT_ID_HERE"` with your Client ID (from popup)
 5. Replace `"YOUR_CLIENT_SECRET_HERE"` with your Client Secret (from popup)
-6. Save as: `oauth_client.json` (remove .template)
+6. Save as: `oauth_client.json` (remove .EXAMPLE)
 
 ---
 
@@ -223,7 +223,7 @@ python init_drive.py
 - API key stays the same (no need to update)
 
 **oauth_client.json not found:**
-- Copy oauth_client.json.template to oauth_client.json
+- Copy oauth_client.json.EXAMPLE to oauth_client.json
 - Edit with your Client ID and Client Secret
 - See Step 2 above
 

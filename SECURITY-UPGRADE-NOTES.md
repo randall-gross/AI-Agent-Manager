@@ -40,7 +40,7 @@ This upgrade implements 5 critical security fixes to protect the AI Agent Manage
 **Solution:**
 - Moved OAuth config to separate `oauth_client.json` file
 - Added to .gitignore (won't be committed)
-- Created `oauth_client.json.template` for easy setup
+- Created `oauth_client.json.EXAMPLE` for easy setup
 - Setup script validates file exists before proceeding
 
 **Files Modified:**
@@ -49,7 +49,7 @@ This upgrade implements 5 critical security fixes to protect the AI Agent Manage
 - `.gitignore`: Added oauth_client.json
 
 **Files Created:**
-- `oauth_client.json.template`: Template with placeholders
+- `oauth_client.json.EXAMPLE`: Template with placeholders
 - `.gitignore`: Git ignore file
 
 **User Impact:**
@@ -171,7 +171,7 @@ This will create credentials.json.encrypted and you can delete credentials.json
 **1. Create oauth_client.json:**
 ```bash
 # Copy template
-copy oauth_client.json.template oauth_client.json
+copy oauth_client.json.EXAMPLE oauth_client.json
 
 # Edit oauth_client.json with your Google Cloud credentials
 # Get credentials from: https://console.cloud.google.com/apis/credentials
@@ -209,7 +209,7 @@ Follow the updated GPT-SETUP-GUIDE.md which includes:
 
 ### New Files:
 - `.gitignore` - Protects sensitive files from Git
-- `oauth_client.json.template` - Template for OAuth config
+- `oauth_client.json.EXAMPLE` - Template for OAuth config
 - `SECURITY-UPGRADE-NOTES.md` - This file
 
 ### Files to Protect:
@@ -291,7 +291,7 @@ git checkout HEAD~1 agent_server.py auth_setup.py requirements.txt
 **2. Remove New Files:**
 ```bash
 del .gitignore
-del oauth_client.json.template
+del oauth_client.json.EXAMPLE
 del SECURITY-UPGRADE-NOTES.md
 ```
 

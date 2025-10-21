@@ -55,7 +55,7 @@ AI Agent Manager lets you create specialized AI agents through conversation with
 2. **Configure OAuth**
    ```bash
    # Copy template and add your credentials
-   copy oauth_client.json.template oauth_client.json
+   copy oauth_client.json.EXAMPLE oauth_client.json
    # Edit oauth_client.json with your Client ID and Client Secret
    ```
 
