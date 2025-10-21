@@ -7,6 +7,7 @@ servers:
   - url: http://localhost:3000
     description: Local development server (REPLACE WITH YOUR NGROK URL)
 components:
+  schemas: {}
   securitySchemes:
     BearerAuth:
       type: http
