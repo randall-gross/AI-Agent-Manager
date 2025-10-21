@@ -4,6 +4,15 @@ Flask server for AI Agent Manager
 Provides REST API for ChatGPT to access Google Drive agents
 """
 
+import sys
+import io
+
+# Configure stdout/stderr for UTF-8 on Windows (Python 3.14 compatibility)
+if sys.platform == 'win32':
+    if hasattr(sys.stdout, 'reconfigure'):
+        sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+        sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+
 from flask import Flask, jsonify, request
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
@@ -13,7 +22,6 @@ from googleapiclient.errors import HttpError
 from pyngrok import ngrok
 import json
 import os
-import sys
 import logging
 from logging.handlers import RotatingFileHandler
 from datetime import datetime
@@ -62,8 +70,11 @@ def setup_logging():
     file_handler.setFormatter(log_formatter)
     file_handler.setLevel(logging.INFO)
 
-    # Console handler
+    # Console handler with UTF-8 encoding for Windows compatibility
     console_handler = logging.StreamHandler()
+    # Configure stream to use UTF-8 and replace unmappable characters
+    if hasattr(console_handler.stream, 'reconfigure'):
+        console_handler.stream.reconfigure(encoding='utf-8', errors='replace')
     console_handler.setFormatter(log_formatter)
     console_handler.setLevel(logging.INFO)
 
