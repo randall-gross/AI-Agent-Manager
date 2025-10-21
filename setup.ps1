@@ -2,6 +2,10 @@
 # One-time setup script for AI Agent Manager
 # Run this once to configure everything
 
+# CRITICAL: Set working directory to script location
+# This ensures all file paths work correctly regardless of where PowerShell was launched
+Set-Location -Path $PSScriptRoot
+
 Write-Host ""
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host "  AI Agent Manager - Setup" -ForegroundColor Cyan
