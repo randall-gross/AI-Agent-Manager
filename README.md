@@ -130,10 +130,11 @@ AI Agent Manager includes comprehensive security protections:
 
 ## Documentation
 
-- **[README.txt](README.txt)** - Complete user guide (comprehensive)
-- **[QUICK-START.md](QUICK-START.md)** - 1-page quick reference
-- **[GPT-SETUP-GUIDE.md](GPT-SETUP-GUIDE.md)** - Detailed ChatGPT configuration
-- **[SECURITY-UPGRADE-NOTES.md](SECURITY-UPGRADE-NOTES.md)** - Security features and migration
+- **[README.md](README.md)** - This file - comprehensive overview and quick start
+- **[QUICK-START.md](QUICK-START.md)** - 1-page quick reference guide
+- **[GPT-SETUP-GUIDE.md](GPT-SETUP-GUIDE.md)** - Detailed ChatGPT configuration walkthrough
+- **[SECURITY-UPGRADE-NOTES.md](SECURITY-UPGRADE-NOTES.md)** - Security features and migration guide
+- **[README.txt](README.txt)** - Alternative text-based comprehensive guide
 
 ---
 
@@ -244,7 +245,7 @@ type agent-server.log
 - Update ChatGPT Actions with new URL
 - API key stays the same (no need to update)
 
-**Full troubleshooting guide:** [README.txt](README.txt#troubleshooting)
+**For more troubleshooting:** See [GPT-SETUP-GUIDE.md](GPT-SETUP-GUIDE.md) for detailed solutions
 
 ---
 
@@ -355,7 +356,9 @@ Contributions welcome! Please:
 
 ## Support
 
-- **Documentation:** [README.txt](README.txt) for complete guide
+- **Documentation:** This README provides complete overview
+- **Quick Start:** [QUICK-START.md](QUICK-START.md) for fast setup
+- **ChatGPT Setup:** [GPT-SETUP-GUIDE.md](GPT-SETUP-GUIDE.md) for detailed configuration
 - **Issues:** [GitHub Issues](https://github.com/randall-gross/AI-Agent-Manager/issues)
 - **Logs:** Check `agent-server.log` for errors
 - **Test:** Run `python test_server.py` to diagnose issues

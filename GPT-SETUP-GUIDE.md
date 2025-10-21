@@ -544,7 +544,7 @@ Now that your GPT is configured:
 **Server issues:**
 - Check: `agent-server.log`
 - Run: `python test_server.py`
-- See: README.txt troubleshooting section
+- See: README.md troubleshooting section
 
 **Agent issues:**
 - Use Agent Builder to create well-structured agents
@@ -559,7 +559,7 @@ Now that your GPT is configured:
 **Still stuck?**
 - Review this guide again
 - Check all troubleshooting steps
-- Contact support (see README.txt)
+- See README.md for additional troubleshooting
 
 ---
 

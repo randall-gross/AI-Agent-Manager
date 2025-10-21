@@ -118,7 +118,7 @@ Note: URL also saved to `GPT-CONFIG.txt`
 
 4. Name: `AI Agent Manager`
 5. Description: `Dynamic agent system that loads specialized AI agents from Google Drive on-demand`
-6. Instructions: Copy from README.txt "CHATGPT GPT CONFIGURATION" section (lines 196-244)
+6. Instructions: Copy from GPT-SETUP-GUIDE.md "Instructions" section (the complete GPT instruction text)
 
 **Add Actions:**
 
@@ -227,20 +227,20 @@ python init_drive.py
 - Edit with your Client ID and Client Secret
 - See Step 2 above
 
-**Full troubleshooting:** See README.txt and GPT-SETUP-GUIDE.md
+**Full troubleshooting:** See README.md and GPT-SETUP-GUIDE.md
 
 ---
 
 ## Important Files
 
-- **README.txt** - Complete documentation
-- **GPT-SETUP-GUIDE.md** - Detailed ChatGPT setup walkthrough
+- **README.md** - Main documentation and overview
 - **QUICK-START.md** - This file (1-page reference)
+- **GPT-SETUP-GUIDE.md** - Detailed ChatGPT setup walkthrough
 - **GPT-CONFIG.txt** - Your current URL + API Key (auto-generated)
 - **agent-server.log** - Debug logs and error messages
-- **oauth_client.json** - Your Google OAuth credentials (PRIVATE)
-- **credentials.json.encrypted** - Your Google token (PRIVATE)
-- **config.json** - Server configuration and API key
+- **oauth_client.json** - Your Google OAuth credentials (PRIVATE - never share)
+- **credentials.json.encrypted** - Your Google token (PRIVATE - never share)
+- **config.json** - Server configuration and API key (PRIVATE - never share)
 
 ---
 
@@ -326,6 +326,6 @@ After setup, you'll have 4 starter agents:
 
 ---
 
-**That's it!** See README.txt for complete documentation and troubleshooting.
+**That's it!** See README.md for complete documentation and troubleshooting.
 
 **Questions?** Check agent-server.log for errors or run `python test_server.py` to diagnose issues.

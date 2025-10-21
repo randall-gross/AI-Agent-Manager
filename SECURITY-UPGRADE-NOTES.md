@@ -310,7 +310,7 @@ python -m pip install -r requirements.txt
 
 1. Check logs: `agent-server.log`
 2. Read: `GPT-SETUP-GUIDE.md` (updated)
-3. Read: `README.txt` security section (updated)
+3. Read: `README.md` security section (updated)
 4. Common issues:
    - 401 Unauthorized: Add API key to ChatGPT Actions
    - oauth_client.json not found: Copy template and edit
