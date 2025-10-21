@@ -111,7 +111,7 @@ def load_or_create_api_key():
     if config:
         config['api_key'] = api_key
         try:
-            with open('config.json', 'w') as f:
+            with open('config.json', 'w', encoding='utf-8') as f:
                 json.dump(config, f, indent=2)
             logger.info("✅ API key saved to config.json")
         except Exception as e:
@@ -326,11 +326,11 @@ def start_ngrok():
         # Save URL to config
         if config:
             config['ngrok_url'] = ngrok_url
-            with open('config.json', 'w') as f:
+            with open('config.json', 'w', encoding='utf-8') as f:
                 json.dump(config, f, indent=2)
 
         # Write URL and API key to file for easy copying
-        with open('GPT-CONFIG.txt', 'w') as f:
+        with open('GPT-CONFIG.txt', 'w', encoding='utf-8') as f:
             f.write(f"AI Agent Manager - ChatGPT Configuration\n")
             f.write(f"="*60 + "\n\n")
             f.write(f"Server URL: {ngrok_url}\n\n")
