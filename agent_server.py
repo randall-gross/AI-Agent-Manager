@@ -149,7 +149,7 @@ def check_authentication():
 def load_config():
     """Load configuration from config.json"""
     try:
-        with open('config.json', 'r') as f:
+        with open('config.json', 'r', encoding='utf-8') as f:
             return json.load(f)
     except FileNotFoundError:
         logger.error("config.json not found - run setup first")
@@ -300,21 +300,32 @@ def start_ngrok():
 
             if os.path.exists(ngrok_config_path):
                 try:
-                    with open(ngrok_config_path, 'r') as f:
+                    with open(ngrok_config_path, 'r', encoding='utf-8') as f:
                         ngrok_config = yaml.safe_load(f)
                         if ngrok_config and 'authtoken' in ngrok_config:
-                            ngrok.set_auth_token(ngrok_config['authtoken'])
-                            logger.info("✅ Loaded authtoken from ~/.ngrok2/ngrok.yml")
+                            token = ngrok_config['authtoken']
+                            # Validate token is not None/empty/whitespace
+                            if token and isinstance(token, str) and token.strip():
+                                ngrok.set_auth_token(token.strip())
+                                logger.info("✅ Loaded authtoken from ~/.ngrok2/ngrok.yml")
+                            else:
+                                logger.error(f"❌ Invalid authtoken in {ngrok_config_path}")
+                                logger.error("   Token is empty or contains only whitespace")
+                                logger.error("   Please run setup.ps1 to configure ngrok")
+                                return False
                         else:
-                            logger.error("❌ No authtoken found in ngrok.yml")
-                            logger.error("Please run setup.ps1 to configure ngrok")
+                            logger.error(f"❌ No authtoken found in {ngrok_config_path}")
+                            logger.error("   Please run setup.ps1 to configure ngrok")
                             return False
+                except yaml.YAMLError as e:
+                    logger.error(f"❌ Failed to parse YAML in {ngrok_config_path}: {e}")
+                    return False
                 except Exception as e:
-                    logger.error(f"Failed to read ngrok.yml: {e}")
+                    logger.error(f"❌ Failed to read {ngrok_config_path}: {e}")
                     return False
             else:
-                logger.error("❌ No ngrok configuration found at ~/.ngrok2/ngrok.yml")
-                logger.error("Please run setup.ps1 to configure ngrok")
+                logger.error(f"❌ No ngrok configuration found at {ngrok_config_path}")
+                logger.error("   Please run setup.ps1 to configure ngrok")
                 return False
 
         # Start tunnel

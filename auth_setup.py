@@ -32,7 +32,7 @@ def load_oauth_client_config():
         sys.exit(1)
 
     try:
-        with open('oauth_client.json', 'r') as f:
+        with open('oauth_client.json', 'r', encoding='utf-8') as f:
             config = json.load(f)
 
         # Validate config has required fields
@@ -105,7 +105,7 @@ def main():
             print("   (Using Windows DPAPI for encryption)")
         else:
             # Fallback: save unencrypted
-            with open('credentials.json', 'w') as f:
+            with open('credentials.json', 'w', encoding='utf-8') as f:
                 f.write(creds_json)
 
             print()

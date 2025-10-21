@@ -255,7 +255,7 @@ To edit an agent, open its document in Google Drive and make changes.
             'version': '1.0.0'
         }
 
-        with open('config.json', 'w') as f:
+        with open('config.json', 'w', encoding='utf-8') as f:
             json.dump(config, f, indent=2)
 
         print()
