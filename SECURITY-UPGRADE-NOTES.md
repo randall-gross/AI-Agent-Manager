@@ -3,6 +3,8 @@
 **Date:** 2025-10-20
 **Version:** 1.1.0 (Security Update)
 
+> **Note:** This document describes the security features added in v1.1.0. Some implementation details have been updated since initial release (e.g., `oauth_client.json` now ships with placeholders instead of as a separate `.EXAMPLE` file). Core security features remain unchanged.
+
 ## Overview
 
 This upgrade implements 5 critical security fixes to protect the AI Agent Manager system from unauthorized access, credential theft, and abuse.
@@ -40,7 +42,7 @@ This upgrade implements 5 critical security fixes to protect the AI Agent Manage
 **Solution:**
 - Moved OAuth config to separate `oauth_client.json` file
 - Added to .gitignore (won't be committed)
-- Created `oauth_client.json.EXAMPLE` for easy setup
+- ~~Created `oauth_client.json.EXAMPLE` for easy setup~~ **Updated:** Now includes `oauth_client.json` directly with placeholder values
 - Setup script validates file exists before proceeding
 
 **Files Modified:**
@@ -168,13 +170,12 @@ This will create credentials.json.encrypted and you can delete credentials.json
 
 ## Migration Steps for New Users:
 
-**1. Create oauth_client.json:**
+**1. Configure oauth_client.json:**
 ```bash
-# Copy template
-copy oauth_client.json.EXAMPLE oauth_client.json
-
 # Edit oauth_client.json with your Google Cloud credentials
+# Replace YOUR_CLIENT_ID and YOUR_CLIENT_SECRET with actual values
 # Get credentials from: https://console.cloud.google.com/apis/credentials
+notepad oauth_client.json
 ```
 
 **2. Run Setup:**
@@ -209,7 +210,7 @@ Follow the updated GPT-SETUP-GUIDE.md which includes:
 
 ### New Files:
 - `.gitignore` - Protects sensitive files from Git
-- `oauth_client.json.EXAMPLE` - Template for OAuth config
+- ~~`oauth_client.json.EXAMPLE` - Template for OAuth config~~ **Updated:** Now `oauth_client.json` with placeholders
 - `SECURITY-UPGRADE-NOTES.md` - This file
 
 ### Files to Protect:
@@ -291,8 +292,8 @@ git checkout HEAD~1 agent_server.py auth_setup.py requirements.txt
 **2. Remove New Files:**
 ```bash
 del .gitignore
-del oauth_client.json.EXAMPLE
 del SECURITY-UPGRADE-NOTES.md
+# Note: oauth_client.json is now the standard template file
 ```
 
 **3. Reinstall Dependencies:**

@@ -59,14 +59,14 @@
 
 ### Step 2: Configure Project (2 min)
 
-**Copy and edit credentials file:**
+**Edit credentials file:**
 
 1. Open folder: `AI-Agent-Manager`
-2. Find file: `oauth_client.json.EXAMPLE`
+2. Find file: `oauth_client.json`
 3. Open with Notepad
-4. Replace `"YOUR_CLIENT_ID_HERE"` with your Client ID (from popup)
-5. Replace `"YOUR_CLIENT_SECRET_HERE"` with your Client Secret (from popup)
-6. Save as: `oauth_client.json` (remove .EXAMPLE)
+4. Replace `"YOUR_CLIENT_ID"` with your Client ID (from popup)
+5. Replace `"YOUR_CLIENT_SECRET"` with your Client Secret (from popup)
+6. Save the file
 
 ---
 
@@ -223,8 +223,8 @@ python init_drive.py
 - API key stays the same (no need to update)
 
 **oauth_client.json not found:**
-- Copy oauth_client.json.EXAMPLE to oauth_client.json
-- Edit with your Client ID and Client Secret
+- The file should be included with placeholder values
+- Edit with your Client ID and Client Secret from Google Cloud Console
 - See Step 2 above
 
 **Full troubleshooting:** See README.md and GPT-SETUP-GUIDE.md
