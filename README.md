@@ -132,6 +132,7 @@ AI Agent Manager includes comprehensive security protections:
 
 - **[README.md](README.md)** - This file - comprehensive overview and quick start
 - **[QUICK-START.md](QUICK-START.md)** - 1-page quick reference guide
+- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Complete troubleshooting guide for all common issues
 - **[GPT-SETUP-GUIDE.md](GPT-SETUP-GUIDE.md)** - Detailed ChatGPT configuration walkthrough
 - **[SECURITY-UPGRADE-NOTES.md](SECURITY-UPGRADE-NOTES.md)** - Security features and migration guide
 - **[README.txt](README.txt)** - Alternative text-based comprehensive guide
@@ -210,7 +211,33 @@ Four pre-configured agents included:
 
 ## Troubleshooting
 
-### Server won't start
+**📚 Complete Guide:** [TROUBLESHOOTING.md](TROUBLESHOOTING.md) - Comprehensive troubleshooting for all issues
+
+### Common Windows Setup Issues
+
+**PowerShell execution policy error:**
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+**File blocked (downloaded from internet):**
+```powershell
+Unblock-File .\setup.ps1
+```
+
+**Path with spaces in username:**
+```powershell
+cd "C:\Users\Silicon computers\Documents\AI-Agent-Manager"
+```
+
+**Python not found after installation:**
+- Reinstall Python and CHECK "Add Python to PATH" during setup
+- Restart PowerShell after installing Python
+- Disable Windows Store Python alias in Settings → Apps → App execution aliases
+
+### Runtime Issues
+
+**Server won't start:**
 ```bash
 # Check Python installation
 python --version
@@ -219,18 +246,18 @@ python --version
 python test_server.py
 ```
 
-### ChatGPT can't connect
+**ChatGPT can't connect:**
 - Verify server is running (`start-server.bat`)
 - Check URL in ChatGPT Actions matches server console
 - Verify API key is configured in Authentication section
 - Test connection in Actions panel
 
-### 401 Unauthorized error
+**401 Unauthorized error:**
 - Add API key to ChatGPT Actions → Authentication
 - Copy exact key from `GPT-CONFIG.txt` (case-sensitive)
 - Test connection
 
-### No agents found
+**No agents found:**
 ```bash
 # Reinitialize Google Drive structure
 python init_drive.py
@@ -239,13 +266,13 @@ python init_drive.py
 type agent-server.log
 ```
 
-### URL changed after restart
+**URL changed after restart:**
 - Normal with free ngrok
 - Copy new URL from server console
 - Update ChatGPT Actions with new URL
 - API key stays the same (no need to update)
 
-**For more troubleshooting:** See [GPT-SETUP-GUIDE.md](GPT-SETUP-GUIDE.md) for detailed solutions
+**For detailed solutions:** See [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
 
 ---
 
@@ -358,6 +385,7 @@ Contributions welcome! Please:
 
 - **Documentation:** This README provides complete overview
 - **Quick Start:** [QUICK-START.md](QUICK-START.md) for fast setup
+- **Troubleshooting:** [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for all common issues
 - **ChatGPT Setup:** [GPT-SETUP-GUIDE.md](GPT-SETUP-GUIDE.md) for detailed configuration
 - **Issues:** [GitHub Issues](https://github.com/randall-gross/AI-Agent-Manager/issues)
 - **Logs:** Check `agent-server.log` for errors

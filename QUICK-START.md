@@ -14,6 +14,46 @@
 
 ---
 
+## ⚠️ Common Windows Issues (Read This First!)
+
+**Before you start, be aware of these common Windows setup issues:**
+
+### 1. PowerShell Script Blocked
+**If you get:** "Cannot be loaded because running scripts is disabled"
+**Fix:** Run this first:
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+Then run setup.
+
+### 2. File Downloaded from Internet Blocked
+**If you get:** "File is not digitally signed"
+**Fix:** Run this:
+```powershell
+Unblock-File .\setup.ps1
+```
+
+### 3. Path with Spaces
+**If your username has spaces** (e.g., "Silicon computers"), **always use quotes:**
+```powershell
+cd "C:\Users\Silicon computers\Documents\AI-Agent-Manager"
+```
+
+### 4. Python Not Found After Installing
+**Most Common Cause:** "Add Python to PATH" wasn't checked during Python installation.
+**Fix:**
+1. Uninstall Python
+2. Reinstall and CHECK "Add Python to PATH" at the bottom
+3. Restart PowerShell
+
+### 5. Windows Store Python Conflict
+**If you get:** "Install from Microsoft Store" even after installing Python
+**Fix:** Settings → Apps → App execution aliases → Turn OFF "python.exe" aliases
+
+**📚 For complete troubleshooting:** See [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
+
+---
+
 ## First Time Setup (15-20 minutes)
 
 ### Step 1: Google OAuth Setup (5-10 min)
@@ -187,47 +227,45 @@ python init_drive.py
 
 ## Troubleshooting
 
+**📚 Complete Troubleshooting Guide:** [TROUBLESHOOTING.md](TROUBLESHOOTING.md) - Covers all setup and runtime issues
+
+**Quick Fixes:**
+
+**PowerShell script blocked:**
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+**File blocked (downloaded from internet):**
+```powershell
+Unblock-File .\setup.ps1
+```
+
+**Path with spaces (e.g., "Silicon computers"):**
+```powershell
+cd "C:\Users\Silicon computers\Documents\AI-Agent-Manager"
+```
+
+**Python not found:**
+- Reinstall Python with "Add Python to PATH" checked
+- Restart PowerShell after installation
+- Disable Windows Store Python alias in Settings
+
 **401 Unauthorized error:**
 - Add API key to ChatGPT Authentication section
 - Copy exact key from GPT-CONFIG.txt (case-sensitive)
-- Test connection in Actions panel
-
-**Connection failed:**
-- Server must be running (start-server.bat)
-- Check server console is open
-- Verify ngrok URL in Actions matches server console
-- Verify API key is configured in Authentication
-- Check Windows Firewall isn't blocking Python
 
 **OAuth authorization failed:**
-- **Most common:** Email mismatch - test user email doesn't match Gmail used
+- Most common: Email mismatch (test user vs Gmail used)
 - Check: https://console.cloud.google.com/apis/credentials/consent
-- Make sure YOUR Gmail is listed under 'Test users'
-- The email must EXACTLY match the Gmail you selected
-- Setup.ps1 will show detailed error messages with direct links to fix
-- Common errors explained:
-  1. EMAIL MISMATCH - Test user doesn't match selected Gmail
-  2. MISSING TEST USER - You didn't add yourself as test user
-  3. WRONG CREDENTIALS - Check oauth_client.json values
-
-**No agents found:**
-- Run: `python test_server.py` to diagnose
-- Run: `python init_drive.py` to recreate structure
-- Check Google Drive for "AI Agents" folder
-- Check agent-server.log for errors
+- Add your Gmail as test user
 
 **URL changed after restart:**
 - Normal with free ngrok
 - Copy new URL from server console
 - Update ChatGPT Actions with new URL
-- API key stays the same (no need to update)
 
-**oauth_client.json not found:**
-- The file should be included with placeholder values
-- Edit with your Client ID and Client Secret from Google Cloud Console
-- See Step 2 above
-
-**Full troubleshooting:** See README.md and GPT-SETUP-GUIDE.md
+**For detailed solutions:** See [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
 
 ---
 
