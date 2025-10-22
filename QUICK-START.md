@@ -50,6 +50,19 @@ cd "C:\Users\Silicon computers\Documents\AI-Agent-Manager"
 **If you get:** "Install from Microsoft Store" even after installing Python
 **Fix:** Settings → Apps → App execution aliases → Turn OFF "python.exe" aliases
 
+### 6. Antivirus Blocking Ngrok (CRITICAL!)
+**If you get:** "WinError 225" or "virus or potentially unwanted software"
+**What it is:** Windows Defender detects ngrok as "Trojan:Win32/Kepavi!!rfn" (FALSE POSITIVE!)
+**Fix:**
+1. Add exclusions in Windows Security:
+   - `C:\Users\YOUR-USERNAME\.ngrok2`
+   - `C:\Users\YOUR-USERNAME\AppData\Local\Python\...\pyngrok`
+   - Your AI-Agent-Manager folder
+2. Restore ngrok.exe from Protection History
+3. Restart computer
+
+**Ngrok is 100% SAFE** - used by millions of developers worldwide!
+
 **📚 For complete troubleshooting:** See [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
 
 ---

@@ -18,11 +18,12 @@ This guide covers common issues encountered during setup and daily use, with ste
   - [OAuth Authorization Failed](#6-oauth-authorization-failed)
   - [oauth_client.json Issues](#7-oauth_clientjson-issues)
 - [Runtime Issues](#runtime-issues)
-  - [Server Won't Start](#8-server-wont-start)
-  - [401 Unauthorized Error](#9-401-unauthorized-error)
-  - [ChatGPT Can't Connect](#10-chatgpt-cant-connect)
-  - [No Agents Found](#11-no-agents-found)
-  - [Ngrok URL Changed](#12-ngrok-url-changed)
+  - [Windows Defender / Antivirus Blocking Ngrok](#8-windows-defender--antivirus-blocking-ngrok-critical)
+  - [Server Won't Start (Other Causes)](#9-server-wont-start-other-causes)
+  - [401 Unauthorized Error](#10-401-unauthorized-error)
+  - [ChatGPT Can't Connect](#11-chatgpt-cant-connect)
+  - [No Agents Found](#12-no-agents-found)
+  - [Ngrok URL Changed](#13-ngrok-url-changed)
 - [Performance Issues](#performance-issues)
 - [Network/Firewall Issues](#networkfirewall-issues)
 - [Quick Diagnostic Commands](#quick-diagnostic-commands)
@@ -392,7 +393,191 @@ Open `oauth_client.json` - it should look like this:
 
 ## Runtime Issues
 
-### 8. Server Won't Start
+### 8. Windows Defender / Antivirus Blocking Ngrok (CRITICAL)
+
+**Symptom:**
+```
+OSError: [WinError 225] Operation did not complete successfully because
+the file contains a virus or potentially unwanted software
+
+Failed to start ngrok tunnel
+Failed to read C:\Users\...\ngrok.yml
+```
+
+**When it happens:**
+- During `start-server.bat`
+- When running `python agent_server.py`
+- After running setup successfully
+
+**Cause:** Windows Defender or antivirus software incorrectly flags ngrok.exe as malware and quarantines/deletes it.
+
+**Why ngrok is flagged:**
+- Creates network tunnels (looks suspicious to antivirus)
+- Used in penetration testing (legitimate security tool)
+- Detects as "Trojan:Win32/Kepavi!!rfn" (FALSE POSITIVE)
+
+**Ngrok is 100% SAFE** - used by millions of developers worldwide including companies like Microsoft, GitHub, and Stripe.
+
+---
+
+### Solution: Add Antivirus Exclusions and Restore File
+
+### Step 1: Add Exclusions FIRST
+
+**Before restoring the file, add exclusions so it won't be deleted again:**
+
+1. **Press** `Win + I` (Settings)
+2. Type **"virus"** in search
+3. Click **"Virus & threat protection"**
+4. Click **"Manage settings"**
+5. Scroll down, click **"Add or remove exclusions"**
+6. Add these **3 exclusions:**
+
+**Exclusion 1: ngrok config folder**
+- Click **"+ Add an exclusion"** → **"Folder"**
+- Paste path:
+  ```
+  C:\Users\YOUR-USERNAME\.ngrok2
+  ```
+- Click **"Select Folder"**
+
+**Exclusion 2: pyngrok package folder**
+- Click **"+ Add an exclusion"** → **"Folder"**
+- Paste path:
+  ```
+  C:\Users\YOUR-USERNAME\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pyngrok
+  ```
+  (Adjust Python version if different)
+- Click **"Select Folder"**
+
+**Exclusion 3: AI-Agent-Manager project folder**
+- Click **"+ Add an exclusion"** → **"Folder"**
+- Paste path to your project folder:
+  ```
+  C:\Path\To\AI-Agent-Manager
+  ```
+- Click **"Select Folder"**
+
+### Step 2: Check Protection History
+
+1. In Windows Security, click **"Protection history"**
+2. Look for recent quarantined items
+3. Find **"ngrok.exe"** or **"Trojan:Win32/Kepavi!!rfn"**
+4. Note the date/time
+
+### Step 3: Restore Quarantined File
+
+**If ngrok.exe was quarantined:**
+
+1. In Protection history, find the ngrok.exe entry
+2. Click **"Actions"** dropdown
+3. Click **"Restore"**
+4. Click **"Allow on device"**
+5. Confirm when prompted
+
+**If you can't find it in quarantine, reinstall pyngrok:**
+
+```powershell
+# Uninstall
+python -m pip uninstall pyngrok -y
+
+# Reinstall (with exclusions added, won't be deleted)
+python -m pip install pyngrok
+
+# Configure token
+python -c "import pyngrok.ngrok as ngrok; ngrok.set_auth_token('YOUR_NGROK_TOKEN')"
+```
+
+### Step 4: Verify ngrok.exe Exists
+
+```powershell
+# Check if ngrok.exe exists
+Test-Path "$env:LOCALAPPDATA\Python\pythoncore-3.14-64\Lib\site-packages\pyngrok\bin\ngrok.exe"
+
+# Or check via Python
+python -c "import pyngrok; print(pyngrok.get_ngrok_bin())"
+```
+
+If file exists, proceed to Step 5.
+
+### Step 5: Restart Computer (Recommended)
+
+**Restart your computer** for exclusions to fully take effect.
+
+After restart:
+```powershell
+cd "C:\Path\To\AI-Agent-Manager"
+.\start-server.bat
+```
+
+### Step 6: Alternative - Disable Real-time Protection Temporarily
+
+**ONLY FOR TESTING - Re-enable after!**
+
+1. Windows Security → Virus & threat protection
+2. Manage settings
+3. Turn **OFF** "Real-time protection"
+4. Run `.\start-server.bat`
+5. If it works, you confirmed it was antivirus
+6. Turn real-time protection **back ON**
+7. Add permanent exclusions (Step 1)
+
+---
+
+### Third-Party Antivirus (McAfee, Norton, Avast, etc.)
+
+**If using third-party antivirus:**
+
+1. Open your antivirus software
+2. Find "Exclusions", "Whitelist", or "Allow List" settings
+3. Add these paths:
+   - `C:\Users\YOUR-USERNAME\.ngrok2`
+   - `C:\Users\YOUR-USERNAME\AppData\Local\Python\...\pyngrok`
+   - Your AI-Agent-Manager project folder
+4. Restore quarantined ngrok.exe from antivirus quarantine
+5. Restart computer
+
+---
+
+### Common Antivirus Detection Names
+
+Ngrok may be detected as:
+- **Trojan:Win32/Kepavi!!rfn** (Windows Defender)
+- **PUA:Win32/Ngrok** (Potentially Unwanted Application)
+- **Riskware/Ngrok**
+- **HackTool:Win32/Ngrok**
+
+**All are FALSE POSITIVES.** Ngrok is legitimate software.
+
+---
+
+### Verification After Fix
+
+After adding exclusions and restoring:
+
+```powershell
+# Test ngrok directly
+ngrok version
+
+# Should show: ngrok version 3.x.x
+
+# Test via Python
+python -c "import pyngrok.ngrok as ngrok; print(ngrok.get_version())"
+
+# Start server
+.\start-server.bat
+```
+
+**Should see:**
+```
+Server URL: https://abc123.ngrok-free.app
+API Key: your-api-key-here
+Server running...
+```
+
+---
+
+### 9. Server Won't Start (Other Causes)
 
 **Symptom:**
 ```
@@ -401,9 +586,11 @@ Port already in use
 Ngrok connection failed
 ```
 
+**Note:** If you're getting WinError 225 or ngrok errors, see Issue #8 above (Antivirus Blocking Ngrok).
+
 **Solutions:**
 
-### Issue 8A: Port Already in Use
+### Issue 9A: Port Already in Use
 
 **Check if another instance is running:**
 ```powershell
@@ -457,7 +644,7 @@ ngrok authtoken YOUR_NGROK_TOKEN
 
 ---
 
-### 9. 401 Unauthorized Error
+### 10. 401 Unauthorized Error
 
 **Symptom:**
 ```
@@ -516,7 +703,7 @@ If you still see 401:
 
 ---
 
-### 10. ChatGPT Can't Connect
+### 11. ChatGPT Can't Connect
 
 **Symptom:**
 ```
@@ -581,7 +768,7 @@ Free ngrok has limits:
 
 ---
 
-### 11. No Agents Found
+### 12. No Agents Found
 
 **Symptom:**
 ```
@@ -639,7 +826,7 @@ Look for Google API errors or authentication issues.
 
 ---
 
-### 12. Ngrok URL Changed
+### 13. Ngrok URL Changed
 
 **Symptom:**
 ```
